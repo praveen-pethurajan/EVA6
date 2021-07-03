@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from .gradcam import GradCam
-from CIFAR_10.utils import denormalize
+from EVA6.cv_wrapper.utils import denormalize
 
 class VisualizeCam(object):
 
