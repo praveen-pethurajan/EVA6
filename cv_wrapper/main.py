@@ -6,7 +6,7 @@ import torch.backends.cudnn as cudnn
 
 import torchvision
 import torchvision.transforms as transforms
-from CIFAR_10.models.resnet import *
+from EVA6.cv_wrapper.models.resnet import *
 import os
 import argparse
 
