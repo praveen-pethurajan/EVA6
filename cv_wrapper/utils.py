@@ -27,6 +27,7 @@ import random
 from tqdm import notebook
 import os
 from PIL import Image
+from albumentations.pytorch.transforms import ToTensorV2
 
 import albumentations as A
 
@@ -166,6 +167,29 @@ class TinyImageNet(Dataset):
 
     def __len__(self):
         return len(self.indices)
+    
+   
+class TinyImageNetAlbumentation:
+    
+    def __init__(self):
+        pass
+    
+    def train_transform(self,mean,std):
+        train_transforms = A.Compose([  A.PadIfNeeded(min_height=70, min_width=70, always_apply=True),
+                                        A.RandomCrop(height=64, width=64,p=1),
+                                        A.Rotate(limit=5),
+                                        A.HorizontalFlip(p=0.5),
+                                        A.CoarseDropout(max_holes=1,min_holes = 1, max_height=32, max_width=32, p=0.8,fill_value=tuple([x * 255.0 for x in mean]),
+                                      min_height=32, min_width=32),
+                                        A.Normalize(mean=mean, std=std,always_apply=True),
+                                        ToTensorV2()
+                                    ])
+        return lambda img:train_transforms(image=np.array(img))["image"]
+                                
+    def test_transform(self,mean,std):
+        test_transforms = A.Compose([A.Normalize(mean=mean, std=std, always_apply=True),
+                                 ToTensorV2()])
+        return lambda img:test_transforms(image=np.array(img))["image"]
 
 
 def train_transform(train):
